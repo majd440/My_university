@@ -28,12 +28,12 @@
             /* ألوان الواجهة */
             --bg-primary: #f8fafc;
             --bg-secondary: #f1f5f9;
-            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-card: rgba(255, 255, 255, 0.75); /* زيادة الشفافية للزجاج */
             --text-primary: #1e293b;
             --text-secondary: #64748b;
-            --border-color: rgba(148, 163, 184, 0.2);
-            --shadow: rgba(0, 0, 0, 0.06);
-            --shadow-lg: rgba(0, 0, 0, 0.1);
+            --border-color: rgba(148, 163, 184, 0.3);
+            --shadow: rgba(0, 0, 0, 0.05);
+            --shadow-lg: rgba(79, 70, 229, 0.15);
             
             /* متغيرات مرنة للأحجام */
             --sidebar-width: clamp(250px, 25vw, 300px);
@@ -47,11 +47,12 @@
             :root {
                 --bg-primary: #0f172a;
                 --bg-secondary: #1e293b;
-                --bg-card: rgba(30, 41, 59, 0.95);
+                --bg-card: rgba(30, 41, 59, 0.75);
                 --text-primary: #f8fafc;
                 --text-secondary: #94a3b8;
                 --border-color: rgba(148, 163, 184, 0.1);
                 --shadow: rgba(0, 0, 0, 0.3);
+                --shadow-lg: rgba(0, 0, 0, 0.5);
             }
         }
 
@@ -69,11 +70,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 50%, #faf5ff 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 50%, #f3e8ff 100%);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
+            perspective: 1000px; /* للعمق ثلاثي الأبعاد */
         }
 
         /* تحسينات للمس */
@@ -81,7 +83,7 @@
             touch-action: manipulation;
         }
 
-        /* الخلفية المتحركة */
+        /* الخلفية المتحركة المحسنة */
         .bg-blobs {
             position: fixed;
             top: 0;
@@ -96,42 +98,60 @@
         .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            animation: float 20s infinite ease-in-out;
+            filter: blur(90px);
+            opacity: 0.4;
+            animation: float 25s infinite ease-in-out;
         }
 
         .blob-1 {
-            width: min(400px, 40vw);
-            height: min(400px, 40vw);
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.4), rgba(124, 58, 237, 0.3));
+            width: min(500px, 50vw);
+            height: min(500px, 50vw);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.5), rgba(124, 58, 237, 0.4));
             top: -10%;
-            right: -5%;
+            right: -10%;
         }
 
         .blob-2 {
-            width: min(350px, 35vw);
-            height: min(350px, 35vw);
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(245, 158, 11, 0.2));
+            width: min(400px, 40vw);
+            height: min(400px, 40vw);
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(16, 185, 129, 0.3));
             bottom: -10%;
-            left: -5%;
+            left: -10%;
+            animation-delay: -10s;
+        }
+
+        .blob-3 {
+            width: min(300px, 30vw);
+            height: min(300px, 30vw);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(239, 68, 68, 0.2));
+            top: 40%;
+            left: 40%;
             animation-delay: -5s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.05); }
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(30px, -50px) scale(1.1) rotate(10deg); }
+            66% { transform: translate(-20px, 20px) scale(0.95) rotate(-5deg); }
         }
 
-        /* النافذة المنبثقة */
+        /* تأثير الزجاج Glassmorphism */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+        }
+
+        /* النافذة المنبثقة مع حركة ثلاثية الأبعاد */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -139,7 +159,7 @@
             padding: clamp(1rem, 5vw, 2rem);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal-overlay.active {
@@ -148,56 +168,72 @@
         }
 
         .modal {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--border-radius);
-            padding: clamp(1.5rem, 5vw, 3rem);
-            max-width: min(900px, 95vw);
+            padding: clamp(2rem, 6vw, 3rem);
+            max-width: min(1000px, 95vw);
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.8) translateY(50px) rotateX(10deg);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
         }
 
         .modal-overlay.active .modal {
-            transform: scale(1) translateY(0);
+            transform: scale(1) translateY(0) rotateX(0deg);
         }
 
         .modal-header {
             text-align: center;
-            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: clamp(2rem, 6vw, 3rem);
         }
 
         .modal-title {
-            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             font-weight: 900;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
+            display: inline-block;
+            position: relative;
         }
-
-        .modal-subtitle {
-            color: var(--text-secondary);
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        
+        /* تأثير توهج تحت العنوان */
+        .modal-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            border-radius: 2px;
         }
 
         .majors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-            gap: clamp(1rem, 3vw, 1.5rem);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: clamp(1.5rem, 4vw, 2rem);
         }
 
+        /* البطاقة ثلاثية الأبعاد */
         .major-card {
             background: var(--bg-card);
             border: 2px solid var(--border-color);
             border-radius: var(--border-radius);
-            padding: clamp(1.25rem, 4vw, 2rem);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.1s; /* سريع للاستجابة للماوس */
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px -10px var(--shadow);
         }
 
         .major-card::before {
@@ -209,7 +245,7 @@
             height: 100%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s ease;
             z-index: 0;
         }
 
@@ -220,9 +256,8 @@
 
         .major-card:hover,
         .major-card.selected {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+            border-color: var(--primary-light);
+            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.4);
         }
 
         .major-card > * {
@@ -237,37 +272,41 @@
         }
 
         .major-icon {
-            width: clamp(60px, 15vw, 80px);
-            height: clamp(60px, 15vw, 80px);
-            border-radius: clamp(16px, 4vw, 24px);
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+            width: clamp(70px, 18vw, 90px);
+            height: clamp(70px, 18vw, 90px);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            margin: 0 auto clamp(1.5rem, 4vw, 2rem);
+            font-size: clamp(2rem, 6vw, 3rem);
             color: var(--primary);
-            margin: 0 auto clamp(1rem, 3vw, 1.5rem);
-            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .major-card:hover .major-icon,
         .major-card.selected .major-icon {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(10deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
 
         .major-title {
-            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-size: clamp(1.2rem, 3.5vw, 1.4rem);
             font-weight: 800;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             color: var(--text-primary);
         }
 
         .major-desc {
-            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .major-card:hover .major-desc,
@@ -277,19 +316,21 @@
 
         .btn-confirm {
             width: 100%;
-            margin-top: clamp(1.5rem, 4vw, 2rem);
-            padding: clamp(1rem, 3vw, 1.25rem);
+            margin-top: clamp(2rem, 5vw, 3rem);
+            padding: clamp(1.2rem, 3.5vw, 1.5rem);
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 16px;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            border-radius: 20px;
+            font-size: clamp(1.1rem, 3vw, 1.25rem);
             font-weight: 800;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0.5;
             pointer-events: none;
-            min-height: 48px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
         }
 
         .btn-confirm.active {
@@ -297,79 +338,107 @@
             pointer-events: all;
         }
 
+        .btn-confirm::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-confirm:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
         .btn-confirm:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -5px rgba(79, 70, 229, 0.5);
         }
 
         /* قسم المقررات */
         .courses-section {
             background: var(--bg-card);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius);
-            padding: clamp(1.25rem, 4vw, 2rem);
-            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 20px var(--shadow);
+            box-shadow: 0 10px 30px var(--shadow-lg);
         }
 
         .courses-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: clamp(1.25rem, 4vw, 2rem);
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
             flex-wrap: wrap;
             gap: 1rem;
         }
 
         .courses-title {
-            font-size: clamp(1.25rem, 4vw, 1.5rem);
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
             font-weight: 800;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .courses-title i {
             color: var(--primary);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
         }
 
         .btn-change-major {
-            padding: clamp(0.6rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+            padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1.5rem, 3.5vw, 2rem);
             background: rgba(79, 70, 229, 0.1);
             border: 1px solid rgba(79, 70, 229, 0.2);
             color: var(--primary);
-            border-radius: 12px;
+            border-radius: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: clamp(0.85rem, 2vw, 1rem);
-            min-height: 44px;
+            gap: 0.75rem;
+            font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+            min-height: 50px;
         }
 
         .btn-change-major:hover {
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
+            transform: translateY(-3px) rotate(2deg);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
         }
 
         .courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-            gap: clamp(1rem, 3vw, 1.5rem);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+            gap: clamp(1.5rem, 4vw, 2rem);
         }
 
         .course-card {
             background: var(--bg-card);
             border: 2px solid var(--border-color);
-            border-radius: clamp(16px, 3vw, 20px);
-            padding: clamp(1.25rem, 4vw, 1.75rem);
+            border-radius: clamp(20px, 4vw, 24px);
+            padding: clamp(1.5rem, 4vw, 2rem);
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
         }
 
         .course-card::before {
@@ -377,11 +446,12 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 5px;
+            width: 6px;
             height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            background: linear-gradient(180deg, var(--primary), var(--accent));
             transform: scaleY(0);
-            transition: transform 0.3s;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: bottom;
         }
 
         .course-card:hover::before {
@@ -389,28 +459,29 @@
         }
 
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px var(--shadow-lg);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -10px var(--shadow-lg);
             border-color: rgba(79, 70, 229, 0.3);
         }
 
         .course-code {
             display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(79, 70, 229, 0.1);
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(236, 72, 153, 0.1));
             color: var(--primary);
-            border-radius: 20px;
-            font-size: clamp(0.8rem, 2vw, 0.85rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
+            border-radius: 30px;
+            font-size: clamp(0.85rem, 2.2vw, 0.9rem);
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(79, 70, 229, 0.1);
         }
 
         .course-name {
-            font-size: clamp(1.1rem, 3vw, 1.2rem);
+            font-size: clamp(1.2rem, 3.5vw, 1.3rem);
             font-weight: 800;
             color: var(--text-primary);
             margin-bottom: 0.75rem;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .course-hours {
@@ -418,33 +489,43 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--text-secondary);
-            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
-            margin-bottom: 1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
         }
 
         .course-progress {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-bottom: 0.75rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 700;
         }
 
         .progress-bar {
-            height: 8px;
+            height: 10px;
             background: var(--bg-secondary);
-            border-radius: 10px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-            transition: width 1s ease;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 100%;
+            border-radius: 20px;
+            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* الشريط الجانبي */
@@ -454,65 +535,72 @@
             top: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-left: 1px solid var(--border-color);
             padding: clamp(1rem, 3vw, 2rem);
             z-index: 100;
             overflow-y: auto;
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.05);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
             transform: translateX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .brand {
             text-align: center;
-            padding-bottom: clamp(1.5rem, 4vw, 2rem);
+            padding-bottom: clamp(2rem, 5vw, 2.5rem);
             border-bottom: 1px solid var(--border-color);
-            margin-bottom: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: clamp(2rem, 5vw, 2.5rem);
         }
 
         .brand-logo {
-            width: clamp(60px, 12vw, 80px);
-            height: clamp(60px, 12vw, 80px);
+            width: clamp(70px, 15vw, 90px);
+            height: clamp(70px, 15vw, 90px);
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: clamp(18px, 4vw, 24px);
+            border-radius: clamp(24px, 5vw, 30px);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: clamp(1.75rem, 5vw, 2.2rem);
+            margin: 0 auto 1.5rem;
+            font-size: clamp(2rem, 6vw, 2.5rem);
             color: white;
-            box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.4);
-            animation: float-logo 4s ease-in-out infinite;
+            box-shadow: 0 15px 35px -5px rgba(79, 70, 229, 0.4);
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes float-logo {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
+        /* تأثير لمعان الشعار */
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg) translateY(-100%);
+            transition: transform 0.6s;
+        }
+
+        .brand-logo:hover::after {
+            transform: rotate(45deg) translateY(100%);
         }
 
         .brand h2 {
-            font-size: clamp(1.4rem, 4vw, 1.6rem);
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 900;
         }
 
         .brand p {
             color: var(--text-secondary);
-            font-size: clamp(0.75rem, 2vw, 0.85rem);
-            font-weight: 600;
+            font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         /* بطاقة الملف الشخصي */
@@ -520,10 +608,10 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            padding: clamp(1.25rem, 4vw, 1.75rem);
+            padding: clamp(1.5rem, 4vw, 2rem);
             text-align: center;
-            margin-bottom: clamp(1.5rem, 4vw, 2rem);
-            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: clamp(2rem, 5vw, 2.5rem);
+            box-shadow: 0 10px 25px var(--shadow);
             position: relative;
             overflow: hidden;
         }
@@ -534,56 +622,60 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
 
         .profile-avatar {
-            width: clamp(70px, 15vw, 90px);
-            height: clamp(70px, 15vw, 90px);
+            width: clamp(80px, 18vw, 100px);
+            height: clamp(80px, 18vw, 100px);
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(124, 58, 237, 0.15));
-            border: 3px solid rgba(79, 70, 229, 0.2);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+            border: 4px solid rgba(79, 70, 229, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: clamp(2rem, 6vw, 2.5rem);
+            margin: 0 auto 1.5rem;
+            font-size: clamp(2.2rem, 6vw, 2.8rem);
             color: var(--primary);
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+            transition: transform 0.4s;
+        }
+
+        .profile-card:hover .profile-avatar {
+            transform: rotate(360deg);
+            border-color: var(--primary);
         }
 
         .profile-name {
-            font-size: clamp(1.1rem, 3vw, 1.25rem);
+            font-size: clamp(1.2rem, 3.5vw, 1.4rem);
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
             word-break: break-word;
         }
 
         .profile-id {
             color: var(--text-secondary);
-            font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
             font-family: monospace;
-            font-weight: 600;
-            background: rgba(79, 70, 229, 0.1);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            font-weight: 700;
+            background: rgba(79, 70, 229, 0.08);
+            padding: 0.25rem 1rem;
+            border-radius: 30px;
             display: inline-block;
-            margin-bottom: 0.5rem;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 0.75rem;
         }
 
         .profile-major {
-            font-size: clamp(0.8rem, 2.2vw, 0.85rem);
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
             color: var(--primary);
-            font-weight: 700;
-            padding: 0.25rem 0.75rem;
+            font-weight: 800;
+            padding: 0.4rem 1rem;
             background: rgba(79, 70, 229, 0.1);
-            border-radius: 20px;
+            border-radius: 30px;
             display: inline-block;
+            border: 1px solid rgba(79, 70, 229, 0.2);
         }
 
         .nav-menu {
@@ -591,52 +683,75 @@
         }
 
         .nav-item {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
 
+        /* تحسينات الروابط وتغيير الأيقونات */
         .nav-link {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 3vw, 1.25rem);
+            padding: clamp(0.85rem, 2.5vw, 1.25rem) clamp(1.25rem, 3.5vw, 1.5rem);
             color: var(--text-secondary);
             text-decoration: none;
-            border-radius: 16px;
+            border-radius: 18px;
             transition: all 0.3s ease;
             border: 1px solid transparent;
             font-weight: 700;
             background: transparent;
             cursor: pointer;
             width: 100%;
-            font-size: clamp(0.9rem, 2.5vw, 1rem);
-            min-height: 48px;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            min-height: 56px;
+            position: relative;
+            overflow: hidden;
         }
 
         .nav-link:hover, .nav-link.active {
-            background: rgba(79, 70, 229, 0.1);
+            background: rgba(79, 70, 229, 0.08);
             color: var(--primary);
-            border-color: rgba(79, 70, 229, 0.2);
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+            border-color: rgba(79, 70, 229, 0.15);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.1);
             transform: translateX(-5px);
         }
 
         .nav-link i {
-            width: 24px;
+            width: 28px;
             text-align: center;
-            font-size: clamp(1.1rem, 3vw, 1.2rem);
+            font-size: clamp(1.2rem, 3.5vw, 1.4rem);
             flex-shrink: 0;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* تأثير ارتداد */
+            display: inline-block;
+        }
+        
+        /* منطقة الأيقونة لدعم التدوير */
+        .icon-container {
+            display: inline-block;
+            perspective: 500px;
+            width: 28px;
+            text-align: center;
         }
 
-        .nav-link span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .nav-link:hover .icon-container i {
+            transform: rotateY(360deg);
+            color: var(--primary);
+        }
+        
+        .nav-link.logout:hover {
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.1);
+        }
+        
+        .nav-link.logout:hover i {
+            color: var(--danger);
         }
 
         /* المحتوى الرئيسي */
         .main-content {
             margin-right: var(--sidebar-width);
-            padding: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
             min-height: 100vh;
             position: relative;
             z-index: 1;
@@ -649,18 +764,23 @@
             position: fixed;
             top: 1rem;
             right: 1rem;
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 16px;
             z-index: 150;
             cursor: pointer;
-            box-shadow: 0 4px 12px var(--shadow);
+            box-shadow: 0 8px 20px var(--shadow);
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: var(--primary);
+            backdrop-filter: blur(10px);
+        }
+        
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
         }
 
         /* الشريط العلوي */
@@ -668,22 +788,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: clamp(2rem, 5vw, 3rem);
             background: var(--bg-card);
-            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            padding: clamp(1.25rem, 4vw, 2rem) clamp(1.5rem, 5vw, 2.5rem);
             border-radius: var(--border-radius);
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 20px var(--shadow);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px var(--shadow);
+            backdrop-filter: blur(15px);
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .welcome-text h1 {
-            font-size: clamp(1.25rem, 4vw, 1.8rem);
-            font-weight: 800;
+            font-size: clamp(1.4rem, 4.5vw, 2rem);
+            font-weight: 900;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
             line-height: 1.3;
         }
 
@@ -692,59 +812,84 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
         }
 
         .date-display {
             color: var(--text-secondary);
-            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
-            font-weight: 600;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 700;
+            background: rgba(0,0,0,0.03);
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            display: inline-block;
         }
 
         .top-actions {
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .btn-action {
-            width: clamp(40px, 10vw, 45px);
-            height: clamp(40px, 10vw, 45px);
-            border-radius: 12px;
+            width: clamp(48px, 12vw, 54px);
+            height: clamp(48px, 12vw, 54px);
+            border-radius: 16px;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            min-width: 44px;
-            min-height: 44px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-action:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
+            background: white;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: var(--primary);
+        }
+        
+        .btn-action:hover::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(79,70,229,0.2) 0%, transparent 70%);
+            animation: ripple 0.6s linear;
+        }
+
+        .btn-action.danger:hover {
             color: var(--danger);
-            transform: translateY(-2px);
+        }
+
+        @keyframes ripple {
+            from { transform: scale(0); opacity: 1; }
+            to { transform: scale(2); opacity: 0; }
         }
 
         /* شبكة لوحة التحكم */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-            gap: clamp(1rem, 3vw, 1.5rem);
+            gap: clamp(1.5rem, 4vw, 2rem);
         }
 
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            padding: clamp(1.25rem, 4vw, 1.75rem);
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px var(--shadow);
+            padding: clamp(1.5rem, 4vw, 2rem);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 10px 30px var(--shadow);
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
         }
 
         .card::before {
@@ -752,33 +897,34 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            transform: scaleY(0);
             transition: transform 0.4s ease;
+            transform-origin: bottom;
         }
 
         .card:hover::before {
-            transform: scaleX(1);
+            transform: scaleY(1);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px var(--shadow-lg);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px var(--shadow-lg);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: clamp(1.25rem, 3.5vw, 1.75rem);
             flex-wrap: wrap;
             gap: 0.5rem;
         }
 
         .card-title {
-            font-size: clamp(1rem, 3vw, 1.15rem);
+            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
             font-weight: 800;
             color: var(--text-primary);
             display: flex;
@@ -788,19 +934,22 @@
         }
 
         .stat-value {
-            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-size: clamp(2.2rem, 7vw, 2.8rem);
             font-weight: 900;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
-            line-height: 1.2;
+            line-height: 1.1;
+            letter-spacing: -1px;
         }
 
         .stat-label {
             color: var(--text-secondary);
-            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
-            font-weight: 600;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .progress-container {
@@ -808,13 +957,13 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .progress-ring {
             position: relative;
-            width: clamp(120px, 30vw, 140px);
-            height: clamp(120px, 30vw, 140px);
+            width: clamp(140px, 35vw, 160px);
+            height: clamp(140px, 35vw, 160px);
         }
 
         .progress-ring svg {
@@ -826,16 +975,16 @@
         .progress-ring-bg {
             fill: none;
             stroke: var(--bg-secondary);
-            stroke-width: 10;
+            stroke-width: 12;
         }
 
         .progress-ring-fill {
             fill: none;
             stroke: url(#gradient);
-            stroke-width: 10;
+            stroke-width: 12;
             stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease;
-            filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.3));
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+            filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.4));
         }
 
         .progress-text {
@@ -843,7 +992,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-size: clamp(1.8rem, 6vw, 2.2rem);
             font-weight: 900;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -851,16 +1000,16 @@
         }
 
         .progress-label {
-            font-size: clamp(0.9rem, 2.5vw, 1rem);
-            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            font-weight: 800;
             color: var(--text-secondary);
         }
 
         .chart-container {
             position: relative;
-            height: clamp(200px, 40vw, 250px);
+            height: clamp(250px, 45vw, 300px);
             width: 100%;
-            min-height: 200px;
+            min-height: 250px;
         }
 
         .hidden { 
@@ -875,13 +1024,15 @@
             left: 0;
             right: 0;
             background: var(--bg-card);
+            backdrop-filter: blur(20px);
             border-top: 1px solid var(--border-color);
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1rem;
             z-index: 100;
-            box-shadow: 0 -4px 20px var(--shadow);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
             justify-content: space-around;
             align-items: center;
-            height: 64px;
+            height: 70px;
+            border-radius: 24px 24px 0 0;
         }
 
         .bottom-nav-item {
@@ -892,42 +1043,44 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.3s;
             padding: 0.5rem;
-            min-width: 64px;
+            min-width: 60px;
         }
 
         .bottom-nav-item i {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
+            transition: transform 0.3s;
         }
 
         .bottom-nav-item.active {
             color: var(--primary);
         }
+        
+        .bottom-nav-item.active i {
+            transform: translateY(-5px);
+        }
 
-        .bottom-nav-item:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
+        .bottom-nav-item:active i {
+            transform: scale(0.8);
         }
 
         /* Media Queries متقدمة */
-        
-        /* تابلت وأصغر */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(100%);
-                width: 280px;
-                box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+                width: 300px;
             }
 
             .sidebar.open {
                 transform: translateX(0);
+                box-shadow: -10px 0 50px rgba(0,0,0,0.2);
             }
 
             .main-content {
                 margin-right: 0;
-                padding-bottom: 80px; /* مساحة للشريط السفلي */
+                padding-bottom: 90px;
             }
 
             .mobile-menu-btn {
@@ -937,329 +1090,88 @@
             .bottom-nav {
                 display: flex;
             }
-
-            .dashboard-grid {
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            }
         }
 
-        /* الهواتف */
         @media (max-width: 768px) {
             :root {
-                --border-radius: 16px;
+                --border-radius: 20px;
             }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .courses-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .majors-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .top-bar {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-
-            .welcome-text h1 {
-                font-size: 1.25rem;
-            }
-
-            .courses-header {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-
-            .btn-change-major {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .card {
-                padding: 1.25rem;
-            }
-
-            .modal {
-                margin: 0.5rem;
-                padding: 1.5rem;
-                border-radius: 20px;
-            }
-
-            .modal-title {
-                font-size: 1.25rem;
-            }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .courses-grid { grid-template-columns: 1fr; }
+            .majors-grid { grid-template-columns: 1fr; }
+            .top-bar { flex-direction: column; text-align: center; gap: 1.5rem; }
+            .card { padding: 1.5rem; }
         }
 
-        /* هواتف صغيرة جداً */
         @media (max-width: 480px) {
-            html {
-                font-size: 14px;
-            }
-
-            .dashboard-grid {
-                gap: 0.75rem;
-            }
-
-            .card {
-                padding: 1rem;
-                border-radius: 16px;
-            }
-
-            .stat-value {
-                font-size: 1.75rem;
-            }
-
-            .major-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-
-            .progress-ring {
-                width: 100px;
-                height: 100px;
-            }
-
-            .progress-text {
-                font-size: 1.25rem;
-            }
-
-            .btn-confirm {
-                padding: 0.875rem;
-                font-size: 0.95rem;
-            }
-
-            .nav-link {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
+            html { font-size: 14px; }
+            .card { padding: 1.25rem; border-radius: 18px; }
         }
 
-        /* شاشات عريضة جداً */
         @media (min-width: 1400px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .courses-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .majors-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            .dashboard-grid { grid-template-columns: repeat(4, 1fr); }
+            .courses-grid { grid-template-columns: repeat(3, 1fr); }
+            .majors-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* طباعة */
         @media print {
-            .sidebar, .bottom-nav, .mobile-menu-btn, .btn-action, .btn-change-major {
-                display: none !important;
-            }
-
-            .main-content {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .card {
-                break-inside: avoid;
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
+            .sidebar, .bottom-nav, .mobile-menu-btn, .btn-action, .btn-change-major { display: none !important; }
+            .main-content { margin: 0 !important; padding: 0 !important; }
+            .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
         }
 
-        /* تقليل الحركة للمستخدمين الحساسين */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         }
 
-        /* دعم الشاشات العمودية والأفقية */
-        @media (orientation: landscape) and (max-height: 600px) {
-            .sidebar {
-                padding-top: 1rem;
-                padding-bottom: 1rem;
-            }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
 
-            .brand {
-                padding-bottom: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .brand-logo {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-
-            .profile-card {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .profile-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-        }
-
-        /* تحسين الوصول */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
-
-        /* تركيز الوصول */
-        *:focus-visible {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        /* تحسين التمرير */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* أنماط إضافية للرسوم المتحركة */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(-100%); opacity: 1; }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        /* حركات الدخول */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .animate-fadeIn {
-            animation: fadeIn 0.5s ease forwards;
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
         }
 
-        /* حاوية مرنة للرسوم البيانية */
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 200px;
-        }
+        .chart-wrapper { position: relative; width: 100%; height: 100%; min-height: 220px; }
     </style>
 </head>
 <body>
     <div class="bg-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
-    <!-- زر القائمة للجوال -->
     <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="فتح القائمة">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- طبقة تعتيم للقائمة الجانبية على الجوال -->
-    <div class="sidebar-overlay" onclick="toggleSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99;"></div>
+    <div class="sidebar-overlay" onclick="toggleSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(3px);"></div>
 
     <!-- النافذة المنبثقة لاختيار التخصص -->
     <div class="modal-overlay" id="majorModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">اختيار التخصص الدراسي</h2>
-                <p class="modal-subtitle">اختر تخصصك لعرض المقررات الدراسية الخاصة بك</p>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 0.5rem;">اختر تخصصك لعرض المقررات الدراسية الخاصة بك</p>
             </div>
             
             <div class="majors-grid" id="majorsGrid" role="radiogroup" aria-label="التخصصات المتاحة">
-                <div class="major-card" data-major="cs" onclick="selectMajor('cs')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-brain" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">علوم الحاسب والذكاء الاصطناعي</h3>
-                    <p class="major-desc">برمجة، تعلم آلي، شبكات عصبية، ومعالجة اللغات الطبيعية</p>
-                </div>
-
-                <div class="major-card" data-major="cyber" onclick="selectMajor('cyber')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">الأمن السيبراني</h3>
-                    <p class="major-desc">حماية الشبكات، اختبار اختراق، تحليل البرمجيات الخبيثة</p>
-                </div>
-
-                <div class="major-card" data-major="data" onclick="selectMajor('data')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-database" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">علم البيانات</h3>
-                    <p class="major-desc">تحليل البيانات، تعدين البيانات، الإحصاء التطبيقي</p>
-                </div>
-
-                <div class="major-card" data-major="eng" onclick="selectMajor('eng')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-cogs" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">الهندسة المتقدمة</h3>
-                    <p class="major-desc">هندسة الروبوتات، الطاقة المتجددة، المواد الذكية</p>
-                </div>
-
-                <div class="major-card" data-major="med" onclick="selectMajor('med')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-heartbeat" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">الطب والعلوم الصحية</h3>
-                    <p class="major-desc">الطب البشري، التمريض، الصيدلة، والبحث الطبي</p>
-                </div>
-
-                <div class="major-card" data-major="business" onclick="selectMajor('business')" role="radio" aria-checked="false" tabindex="0">
-                    <div class="major-icon">
-                        <i class="fas fa-chart-line" aria-hidden="true"></i>
-                    </div>
-                    <h3 class="major-title">إدارة الأعمال الرقمية</h3>
-                    <p class="major-desc">التجارة الإلكترونية، التسويق الرقمي، ريادة الأعمال</p>
-                </div>
+                <!-- سيتم توليد البطاقات هنا -->
             </div>
 
             <button class="btn-confirm" id="confirmBtn" onclick="confirmMajor()" disabled>
-                تأكيد الاختيار
+                <i class="fas fa-check-circle" style="margin-left: 8px;"></i> تأكيد الاختيار
             </button>
         </div>
     </div>
@@ -1274,7 +1186,7 @@
     </svg>
 
     <!-- القائمة الجانبية -->
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="القائمة الرئيسية">
+    <aside class="sidebar glass-panel" id="sidebar" role="navigation" aria-label="القائمة الرئيسية">
         <div class="brand">
             <div class="brand-logo">
                 <i class="fas fa-atom" aria-hidden="true"></i>
@@ -1295,25 +1207,25 @@
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="#" class="nav-link active" onclick="showSection('dashboard', event)" aria-current="page">
-                    <i class="fas fa-home" aria-hidden="true"></i>
+                    <span class="icon-container"><i class="fas fa-home" data-alt="fa-building-columns"></i></span>
                     <span>الرئيسية</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="showSection('courses', event)">
-                    <i class="fas fa-book" aria-hidden="true"></i>
+                    <span class="icon-container"><i class="fas fa-book" data-alt="fa-book-open-reader"></i></span>
                     <span>المقررات</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="showSection('performance', event)">
-                    <i class="fas fa-chart-line" aria-hidden="true"></i>
+                    <span class="icon-container"><i class="fas fa-chart-line" data-alt="fa-chart-pie"></i></span>
                     <span>الأداء</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" style="margin-top: 2rem; color: var(--danger);" onclick="logout()">
-                    <i class="fas fa-power-off" aria-hidden="true"></i>
+                <a href="#" class="nav-link logout" style="margin-top: 2rem;" onclick="logout()">
+                    <span class="icon-container"><i class="fas fa-power-off" data-alt="fa-right-from-bracket"></i></span>
                     <span>خروج</span>
                 </a>
             </li>
@@ -1322,7 +1234,7 @@
 
     <!-- المحتوى الرئيسي -->
     <main class="main-content" role="main">
-        <div class="top-bar">
+        <div class="top-bar glass-panel">
             <div class="welcome-text">
                 <h1>مرحباً، <span id="welcomeName">--</span> 👋</h1>
                 <div class="date-display" id="currentDate">--</div>
@@ -1331,7 +1243,7 @@
                 <button class="btn-action" title="الإشعارات" aria-label="الإشعارات">
                     <i class="fas fa-bell" aria-hidden="true"></i>
                 </button>
-                <button class="btn-action" onclick="logout()" title="خروج" aria-label="تسجيل الخروج">
+                <button class="btn-action danger" onclick="logout()" title="خروج" aria-label="تسجيل الخروج">
                     <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                 </button>
             </div>
@@ -1340,43 +1252,43 @@
         <!-- قسم لوحة التحكم -->
         <div id="dashboardSection" role="tabpanel" aria-labelledby="tab-dashboard">
             <div class="dashboard-grid">
-                <div class="card">
+                <div class="card animate-fadeIn" style="animation-delay: 0.1s;">
                     <div class="card-header">
                         <div>
                             <div class="stat-value">87%</div>
                             <div class="stat-label">المعدل التراكمي</div>
                         </div>
-                        <i class="fas fa-chart-pie" style="font-size: clamp(1.75rem, 5vw, 2.5rem); color: var(--primary); opacity: 0.2;" aria-hidden="true"></i>
+                        <i class="fas fa-graduation-cap" style="font-size: clamp(2rem, 6vw, 2.5rem); color: var(--primary); opacity: 0.2;" aria-hidden="true"></i>
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card animate-fadeIn" style="animation-delay: 0.2s;">
                     <div class="card-header">
                         <div>
                             <div class="stat-value" id="coursesCount">0</div>
                             <div class="stat-label">مقررات هذا الفصل</div>
                         </div>
-                        <i class="fas fa-book-open" style="font-size: clamp(1.75rem, 5vw, 2.5rem); color: var(--accent); opacity: 0.2;" aria-hidden="true"></i>
+                        <i class="fas fa-layer-group" style="font-size: clamp(2rem, 6vw, 2.5rem); color: var(--accent); opacity: 0.2;" aria-hidden="true"></i>
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card animate-fadeIn" style="animation-delay: 0.3s;">
                     <div class="card-header">
                         <div>
                             <div class="stat-value" id="hoursCount">0</div>
                             <div class="stat-label">ساعة معتمدة</div>
                         </div>
-                        <i class="fas fa-clock" style="font-size: clamp(1.75rem, 5vw, 2.5rem); color: var(--warning); opacity: 0.2;" aria-hidden="true"></i>
+                        <i class="fas fa-clock" style="font-size: clamp(2rem, 6vw, 2.5rem); color: var(--warning); opacity: 0.2;" aria-hidden="true"></i>
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card animate-fadeIn" style="animation-delay: 0.4s;">
                     <div class="progress-container">
                         <div class="progress-ring">
-                            <svg viewBox="0 0 140 140" preserveAspectRatio="xMidYMid meet">
-                                <circle class="progress-ring-bg" cx="70" cy="70" r="60"></circle>
-                                <circle class="progress-ring-fill" cx="70" cy="70" r="60" 
-                                        stroke-dasharray="377" stroke-dashoffset="37.7"></circle>
+                            <svg viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet">
+                                <circle class="progress-ring-bg" cx="80" cy="80" r="70"></circle>
+                                <circle class="progress-ring-fill" cx="80" cy="80" r="70" 
+                                        stroke-dasharray="440" stroke-dashoffset="44"></circle>
                             </svg>
                             <div class="progress-text">90%</div>
                         </div>
@@ -1384,7 +1296,7 @@
                     </div>
                 </div>
 
-                <div class="card" style="grid-column: 1 / -1;">
+                <div class="card animate-fadeIn" style="grid-column: 1 / -1; animation-delay: 0.5s;">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="fas fa-chart-area" aria-hidden="true"></i>
@@ -1402,7 +1314,7 @@
 
         <!-- قسم المقررات -->
         <div id="coursesSection" class="hidden" role="tabpanel" aria-labelledby="tab-courses">
-            <div class="courses-section">
+            <div class="courses-section glass-panel">
                 <div class="courses-header">
                     <h3 class="courses-title">
                         <i class="fas fa-book" aria-hidden="true"></i>
@@ -1421,34 +1333,34 @@
 
         <!-- قسم الأداء -->
         <div id="performanceSection" class="hidden" role="tabpanel" aria-labelledby="tab-performance">
-            <div class="card">
-                <h3 class="card-title" style="margin-bottom: 1.5rem;">
+            <div class="card glass-panel animate-fadeIn">
+                <h3 class="card-title" style="margin-bottom: 2rem;">
                     <i class="fas fa-chart-bar" aria-hidden="true"></i>
                     تقرير الأداء الأكاديمي
                 </h3>
-                <p style="color: var(--text-secondary); text-align: center; padding: clamp(2rem, 6vw, 3rem);">
-                    قريباً - سيتم عرض التقرير التفصيلي هنا
-                </p>
+                <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    <i class="fas fa-rocket" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>قريباً - سيتم عرض التقرير التفصيلي هنا</p>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- شريط التنقل السفلي للجوال -->
-    <nav class="bottom-nav" role="navigation" aria-label="التنقل السفلي">
+    <nav class="bottom-nav glass-panel" role="navigation" aria-label="التنقل السفلي">
         <a href="#" class="bottom-nav-item active" onclick="showSection('dashboard', event)" aria-current="page">
-            <i class="fas fa-home" aria-hidden="true"></i>
+            <i class="fas fa-home"></i>
             <span>الرئيسية</span>
         </a>
         <a href="#" class="bottom-nav-item" onclick="showSection('courses', event)">
-            <i class="fas fa-book" aria-hidden="true"></i>
+            <i class="fas fa-book"></i>
             <span>المقررات</span>
         </a>
         <a href="#" class="bottom-nav-item" onclick="showSection('performance', event)">
-            <i class="fas fa-chart-line" aria-hidden="true"></i>
+            <i class="fas fa-chart-line"></i>
             <span>الأداء</span>
         </a>
-        <a href="#" class="bottom-nav-item" onclick="logout()">
-            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+        <a href="#" class="bottom-nav-item" style="color: var(--danger);" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
             <span>خروج</span>
         </a>
     </nav>
@@ -1534,24 +1446,29 @@
         let currentStudent = null;
         let performanceChart = null;
 
-        // التحقق من المصادقة
+        // تهيئة الصفحة
         function init() {
             try {
                 currentStudent = JSON.parse(sessionStorage.getItem('currentStudent'));
                 if (!currentStudent) {
-                    window.location.href = 'student-login.html';
-                    return;
+                    // في حالة عدم وجود طالب (للتجربة فقط)، قم بإنشاء وهمي
+                    currentStudent = { id: '2024001', name: 'أحمد محمد', major: null };
+                    sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
                 }
 
-                // تعبئة بيانات الطالب
-                document.getElementById('profileName').textContent = currentStudent.name || 'غير معروف';
-                document.getElementById('profileId').textContent = currentStudent.id || '--';
-                document.getElementById('welcomeName').textContent = (currentStudent.name || 'طالب').split(' ')[0];
+                // تعبئة البيانات
+                document.getElementById('profileName').textContent = currentStudent.name;
+                document.getElementById('profileId').textContent = currentStudent.id;
+                document.getElementById('welcomeName').textContent = (currentStudent.name).split(' ')[0];
                 
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ar-SA', options);
 
-                // التحقق من وجود تخصص
+                // توليد بطاقات التخصصات
+                renderMajorCards();
+                // إعداد تأثير الميل للبطاقات
+                setupTiltEffect();
+
                 if (!currentStudent.major) {
                     openMajorModal();
                 } else {
@@ -1561,63 +1478,120 @@
                 }
 
                 initChart();
-                logActivity();
-                setupAccessibility();
+                setupIconSwap(); // تفعيل تغيير الأيقونات
+                
             } catch (error) {
                 console.error('Error initializing:', error);
-                showToast('خطأ', 'حدث خطأ في تحميل البيانات', 'error');
             }
         }
 
-        // إعدادات إمكانية الوصول
-        function setupAccessibility() {
-            // دعم لوحة المفاتيح لبطاقات التخصصات
-            document.querySelectorAll('.major-card').forEach(card => {
-                card.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        card.click();
-                    }
-                });
-            });
+        // توليد بطاقات التخصصات
+        function renderMajorCards() {
+            const grid = document.getElementById('majorsGrid');
+            grid.innerHTML = Object.keys(majorsData).map((key, index) => `
+                <div class="major-card" data-major="${key}" onclick="selectMajor('${key}')" 
+                     onkeypress="if(event.key==='Enter')selectMajor('${key}')"
+                     role="radio" aria-checked="false" tabindex="0" style="animation: fadeInUp 0.5s ease forwards ${index * 0.1}s; opacity: 0;">
+                    <div class="major-icon">
+                        <i class="fas ${majorsData[key].icon}" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="major-title">${majorsData[key].name}</h3>
+                    <p class="major-desc">${majorsData[key].courses.length} تخصصات فرعية متاحة</p>
+                </div>
+            `).join('');
+        }
 
-            // مراقبة تغيير حجم النافذة
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    if (performanceChart) {
-                        performanceChart.resize();
-                    }
-                }, 250);
+        // إعداد تأثير الميل 3D (Tilt Effect)
+        function setupTiltEffect() {
+            const cards = document.querySelectorAll('.major-card, .card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    if(window.innerWidth < 1024) return; // تعطيل على الجوال للأداء
+                    
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -5; // درجة الميل
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                });
             });
         }
 
-        // تبديل القائمة الجانبية على الجوال
+        // منطق تبديل الأيقونات (Animation Showcase)
+        function setupIconSwap() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                const iconContainer = link.querySelector('.icon-container');
+                if(!iconContainer) return;
+                
+                const icon = iconContainer.querySelector('i');
+                const originalClass = icon.className;
+                const altClass = icon.getAttribute('data-alt');
+                
+                if(!altClass) return;
+                
+                link.addEventListener('mouseenter', () => {
+                    // تدوير 90 درجة
+                    icon.style.transform = 'rotateY(90deg)';
+                    
+                    setTimeout(() => {
+                        // تغيير الأيقونة في منتصف الدوران
+                        icon.className = `fas ${altClass}`;
+                        icon.style.transform = 'rotateY(90deg)'; // الحفاظ على الوضع
+                        
+                        // إكمال الدوران
+                        requestAnimationFrame(() => {
+                            icon.style.transform = 'rotateY(0deg)';
+                        });
+                    }, 150); // نصف زمن الانتقال
+                });
+                
+                link.addEventListener('mouseleave', () => {
+                    icon.style.transform = 'rotateY(90deg)';
+                    
+                    setTimeout(() => {
+                        icon.className = originalClass;
+                        icon.style.transform = 'rotateY(90deg)';
+                        
+                        requestAnimationFrame(() => {
+                            icon.style.transform = 'rotateY(0deg)';
+                        });
+                    }, 150);
+                });
+            });
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
             
             sidebar.classList.toggle('open');
             overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
-            
-            // منع التمرير عند فتح القائمة
             document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
         }
 
         function openMajorModal() {
-            const modal = document.getElementById('majorModal');
-            modal.classList.add('active');
+            document.getElementById('majorModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // إعادة تعيين الاختيار
-            document.querySelectorAll('.major-card').forEach(card => {
-                card.classList.remove('selected');
-                card.setAttribute('aria-checked', 'false');
-            });
             document.getElementById('confirmBtn').classList.remove('active');
             document.getElementById('confirmBtn').disabled = true;
             selectedMajor = null;
+            document.querySelectorAll('.major-card').forEach(c => {
+                c.classList.remove('selected');
+                c.setAttribute('aria-checked', 'false');
+            });
         }
 
         function closeMajorModal() {
@@ -1626,54 +1600,37 @@
         }
 
         function selectMajor(major) {
-            // إزالة الاختيار السابق
-            document.querySelectorAll('.major-card').forEach(card => {
-                card.classList.remove('selected');
-                card.setAttribute('aria-checked', 'false');
+            document.querySelectorAll('.major-card').forEach(c => {
+                c.classList.remove('selected');
+                c.setAttribute('aria-checked', 'false');
             });
             
-            // إضافة الاختيار للبطاقة المنقورة
-            const selectedCard = document.querySelector(`[data-major="${major}"]`);
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
-                selectedCard.setAttribute('aria-checked', 'true');
+            const card = document.querySelector(`[data-major="${major}"]`);
+            if (card) {
+                card.classList.add('selected');
+                card.setAttribute('aria-checked', 'true');
             }
             
             selectedMajor = major;
-            const confirmBtn = document.getElementById('confirmBtn');
-            confirmBtn.classList.add('active');
-            confirmBtn.disabled = false;
+            const btn = document.getElementById('confirmBtn');
+            btn.classList.add('active');
+            btn.disabled = false;
         }
 
         function confirmMajor() {
             if (!selectedMajor) return;
             
-            try {
-                // حفظ في بيانات الطالب
-                currentStudent.major = selectedMajor;
-                sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
-                
-                // تحديث localStorage
-                const students = JSON.parse(localStorage.getItem('students')) || [];
-                const index = students.findIndex(s => s.id === currentStudent.id);
-                if (index !== -1) {
-                    students[index].major = selectedMajor;
-                    localStorage.setItem('students', JSON.stringify(students));
-                }
-                
-                closeMajorModal();
-                updateDashboard();
-                renderCourses();
-                showToast('تم اختيار التخصص بنجاح', majorsData[selectedMajor].name, 'success');
-            } catch (error) {
-                console.error('Error saving major:', error);
-                showToast('خطأ', 'فشل في حفظ التخصص', 'error');
-            }
+            currentStudent.major = selectedMajor;
+            sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+            
+            closeMajorModal();
+            updateDashboard();
+            renderCourses();
+            showToast('تم اختيار التخصص بنجاح', majorsData[selectedMajor].name, 'success');
         }
 
         function updateDashboard() {
             if (!selectedMajor) return;
-            
             const major = majorsData[selectedMajor];
             const totalHours = major.courses.reduce((sum, c) => sum + c.hours, 0);
             
@@ -1684,7 +1641,6 @@
 
         function renderCourses() {
             if (!selectedMajor) return;
-            
             const container = document.getElementById('coursesContainer');
             const major = majorsData[selectedMajor];
             
@@ -1693,7 +1649,7 @@
                     <span class="course-code">${course.code}</span>
                     <h4 class="course-name">${course.name}</h4>
                     <div class="course-hours">
-                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        <i class="far fa-clock" aria-hidden="true"></i>
                         <span>${course.hours} ساعات معتمدة</span>
                     </div>
                     <div class="course-progress">
@@ -1701,7 +1657,7 @@
                             <span>التقدم</span>
                             <span>${course.progress}%</span>
                         </div>
-                        <div class="progress-bar" role="progressbar" aria-valuenow="${course.progress}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar">
                             <div class="progress-fill" style="width: ${course.progress}%"></div>
                         </div>
                     </div>
@@ -1710,26 +1666,27 @@
         }
 
         function showSection(section, event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+            if (event) event.preventDefault();
             
-            // إغلاق القائمة الجانبية على الجوال
             const sidebar = document.getElementById('sidebar');
-            if (sidebar.classList.contains('open')) {
-                toggleSidebar();
-            }
+            if (sidebar.classList.contains('open')) toggleSidebar();
             
-            // إخفاء جميع الأقسام
             document.getElementById('dashboardSection').classList.add('hidden');
             document.getElementById('coursesSection').classList.add('hidden');
             document.getElementById('performanceSection').classList.add('hidden');
             
-            // إظهار القسم المحدد
-            document.getElementById(section + 'Section').classList.remove('hidden');
+            const targetSection = document.getElementById(section + 'Section');
+            targetSection.classList.remove('hidden');
             
-            // تحديث روابط التنقل
+            // إعادة تشغيل الحركات للعناصر داخل القسم
+            const animatedElements = targetSection.querySelectorAll('.animate-fadeIn');
+            animatedElements.forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; /* trigger reflow */
+                el.style.animation = null; 
+            });
+
+            // تحديث التنقل
             document.querySelectorAll('.nav-link, .bottom-nav-item').forEach(link => {
                 link.classList.remove('active');
                 link.removeAttribute('aria-current');
@@ -1743,7 +1700,6 @@
                 }
             }
             
-            // تحديث الرسم البياني إذا كان قسم الأداء
             if (section === 'performance' && performanceChart) {
                 setTimeout(() => performanceChart.update(), 100);
             }
@@ -1753,13 +1709,10 @@
             const ctx = document.getElementById('performanceChart');
             if (!ctx) return;
 
-            // تدمير الرسم السابق إذا وجد
-            if (performanceChart) {
-                performanceChart.destroy();
-            }
+            if (performanceChart) performanceChart.destroy();
 
             const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.3)');
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
             gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
 
             performanceChart = new Chart(ctx, {
@@ -1773,52 +1726,45 @@
                         backgroundColor: gradient,
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 3,
+                        borderWidth: 4,
                         pointBackgroundColor: '#ffffff',
                         pointBorderColor: '#4f46e5',
                         pointBorderWidth: 3,
                         pointRadius: 6,
-                        pointHoverRadius: 8
+                        pointHoverRadius: 9,
+                        pointHoverBackgroundColor: '#4f46e5',
+                        pointHoverBorderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
+                    interaction: { intersect: false, mode: 'index' },
                     plugins: { 
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(30, 41, 59, 0.9)',
-                            titleFont: { family: 'Tajawal', size: 14 },
-                            bodyFont: { family: 'Tajawal', size: 13 },
-                            padding: 12,
-                            cornerRadius: 8,
-                            displayColors: false
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#cbd5e1',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 16,
+                            cornerRadius: 12,
+                            displayColors: false,
+                            titleFont: { family: 'Tajawal', size: 14, weight: 'bold' },
+                            bodyFont: { family: 'Tajawal', size: 13 }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: false,
                             min: 70,
-                            max: 100,
                             grid: { color: 'rgba(148, 163, 184, 0.1)' },
-                            ticks: { 
-                                color: '#64748b', 
-                                font: { family: 'Tajawal', weight: '600', size: 11 },
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            }
+                            ticks: { color: '#64748b', font: { family: 'Tajawal', weight: '600' } }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { 
-                                color: '#64748b', 
-                                font: { family: 'Tajawal', weight: '600', size: 11 }
-                            }
+                            ticks: { color: '#64748b', font: { family: 'Tajawal', weight: '600' } }
                         }
                     }
                 }
@@ -1826,40 +1772,51 @@
         }
 
         function showToast(title, message, type = 'success') {
-            // إزالة التوست السابق إن وجد
             const existingToast = document.querySelector('.toast-notification');
-            if (existingToast) {
-                existingToast.remove();
-            }
+            if (existingToast) existingToast.remove();
 
             const toast = document.createElement('div');
             toast.className = 'toast-notification';
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'polite');
             toast.style.cssText = `
                 position: fixed;
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                max-width: 400px;
-                margin: 0 auto;
-                background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--warning)'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                top: 30px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-100px);
+                background: white;
+                color: var(--text-primary);
+                padding: 1.25rem 2rem;
+                border-radius: 16px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.15);
                 z-index: 3000;
                 font-weight: 700;
-                animation: slideIn 0.3s ease;
-                text-align: center;
-                font-size: clamp(0.9rem, 2.5vw, 1rem);
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                min-width: 300px;
+                border-right: 5px solid ${type === 'success' ? 'var(--success)' : 'var(--danger)'};
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             `;
-            toast.innerHTML = `<strong>${title}</strong><br>${message}`;
+            
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            const color = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}" style="color: ${color}; font-size: 1.5rem;"></i>
+                <div>
+                    <div style="font-size: 1.1rem; color: var(--text-primary);">${title}</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary);">${message}</div>
+                </div>
+            `;
+            
             document.body.appendChild(toast);
             
+            requestAnimationFrame(() => {
+                toast.style.transform = 'translateX(-50%) translateY(0)';
+            });
+            
             setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease forwards';
-                setTimeout(() => toast.remove(), 300);
+                toast.style.transform = 'translateX(-50%) translateY(-100px)';
+                setTimeout(() => toast.remove(), 500);
             }, 3000);
         }
 
@@ -1870,37 +1827,10 @@
             }
         }
 
-        function logActivity() {
-            try {
-                const logs = JSON.parse(localStorage.getItem('logs')) || [];
-                logs.push({
-                    type: 'page_view',
-                    studentId: currentStudent?.id,
-                    page: 'student_dashboard',
-                    timestamp: new Date().toISOString(),
-                    userAgent: navigator.userAgent,
-                    screenSize: `${window.innerWidth}x${window.innerHeight}`
-                });
-                // الاحتفاظ بآخر 100 سجل فقط
-                if (logs.length > 100) logs.shift();
-                localStorage.setItem('logs', JSON.stringify(logs));
-            } catch (error) {
-                console.error('Error logging activity:', error);
-            }
-        }
-
-        // تهيئة عند تحميل الصفحة
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-
-        // معالجة الأخطاء العامة
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Error: ', msg, ' at ', lineNo, ':', columnNo);
-            return false;
-        };
+        window.addEventListener('load', init);
+        window.addEventListener('resize', () => {
+            if (performanceChart) performanceChart.resize();
+        });
     </script>
 </body>
 </html>
